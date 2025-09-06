@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Коробочки - Главная</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-logo">КОРОБОЧКИ</div>
+    <div class="container">
+        <header>
+            <a href="index.html" class="logo"><h1>Коробочки</h1></a>
+            <div class="search-container">
+                <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="Искать на Коробочках...">
+                </div>
+                <div id="search-suggestions">
+                    <div class="suggestions-section">
+                        <h4>Вы искали</h4>
+                        <div id="search-history"></div>
+                    </div>
+                    <div class="suggestions-section">
+                        <h4>Часто ищут</h4>
+                        <div id="popular-searches"></div>
+                    </div>
+                </div>
+            </div>
+
+    <div class="user-actions">
+        <!-- Блок для НЕ авторизованного пользователя -->
+        <div class="user-icons" id="guest-icons">
+            <a href="login.html" class="profile-icon"><i class="fas fa-user"></i></a>
+            <a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-counter">0</span></a>
+            <a href="notifications.html" class="notification-icon"><i class="fas fa-bell"></i><span class="notification-counter">0</span></a>
+            <a href="orders.html"><i class="fas fa-box-archive"></i></a>
+        </div>
+    
+        <!-- Блок для АВТОРИЗОВАННОГО пользователя -->
+        <div class="user-profile-header" id="user-profile-header" style="display: none;">
+            <a href="profile.html" class="profile-info">
+                <img src="" alt="avatar" class="header-avatar">
+                <span class="header-nickname"></span>
+            </a>
+            <div class="header-balance">
+                <i class="fas fa-wallet"></i>
+                <span id="header-balance-value">0 AP</span>
+            </div>
+            <div class="header-actions">
+                <a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-counter">0</span></a>
+                <a href="notifications.html" class="notification-icon"><i class="fas fa-bell"></i><span class="notification-counter">0</span></a>
+                <a href="orders.html"><i class="fas fa-box-archive"></i></a>
+            </div>
+        </div>
+    </div>
+    </header>
+
+        <main>
+            <section class="products-section">
+                <h2 class="search-results-title" id="search-results-title"></h2>
+
+                <div class="filters">
+                    <div class="filter-control">
+                        <button class="filter-btn" id="category-btn"><i class="fas fa-filter"></i><span class="filter-text">Все категории</span></button>
+                        <div class="dropdown-menu" id="category-dropdown">
+                            <a href="#" data-category="all">Все категории</a>
+                            <a href="#" data-category="weapon">Оружие</a>
+                            <a href="#" data-category="armor">Броня</a>
+                            <a href="#" data-category="resource">Ресурсы</a>
+                        </div>
+                    </div>
+                    <div class="filter-control">
+                        <button class="filter-btn" id="sort-btn"><i class="fas fa-sort"></i><span class="filter-text">По популярности</span></button>
+                        <div class="dropdown-menu" id="sort-dropdown">
+                            <a href="#" data-sort="default">По популярности</a>
+                            <a href="#" data-sort="price-asc">Цена: по возрастанию</a>
+                            <a href="#" data-sort="price-desc">Цена: по убыванию</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="product-grid">
+                    <div class="product-card" data-id="1" data-name="Алмазный меч" data-price="75" data-category="weapon" data-discount="20" data-image="images/diamond_sword.png">
+                        <div class="product-image-container">
+                            <img src="images/diamond_sword.png" alt="Алмазный меч" class="product-image">
+                        </div>
+                        <h3>Алмазный меч</h3><p>Надежное оружие для любых сражений.</p>
+                        <div class="product-footer">
+                            <div class="price-container">
+                                <span class="price">75 AP</span>
+                            </div>
+                            <div class="product-controls">
+                                <button class="add-to-cart-btn">В корзину</button>
+                                <div class="quantity-controls-card">
+                                    <button class="quantity-btn-card" data-action="decrease">-</button>
+                                    <span class="quantity-display-card">1</span>
+                                    <button class="quantity-btn-card" data-action="increase">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="product-card" data-id="2" data-name="Железный нагрудник" data-price="50" data-category="armor" data-discount="0" data-image="images/iron_chestplate.png">
+                        <div class="product-image-container">
+                            <img src="images/iron_chestplate.png" alt="Железный нагрудник" class="product-image">
+                        </div>
+                        <h3>Железный нагрудник</h3><p>Базовая, но эффективная защита торса.</p>
+                         <div class="product-footer">
+                            <div class="price-container">
+                                <span class="price">50 AP</span>
+                            </div>
+                            <div class="product-controls">
+                                <button class="add-to-cart-btn">В корзину</button>
+                                <div class="quantity-controls-card">
+                                    <button class="quantity-btn-card" data-action="decrease">-</button>
+                                    <span class="quantity-display-card">1</span>
+                                    <button class="quantity-btn-card" data-action="increase">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="product-card" data-id="3" data-name="Стак обсидиана" data-price="120" data-category="resource" data-discount="0" data-image="images/obsidian.png">
+                        <div class="product-image-container">
+                             <img src="images/obsidian.png" alt="Стак обсидиана" class="product-image">
+                        </div>
+                        <h3>Стак обсидиана</h3><p>64 блока прочнейшего материала.</p>
+                         <div class="product-footer">
+                            <div class="price-container">
+                                <span class="price">120 AP</span>
+                            </div>
+                             <div class="product-controls">
+                                <button class="add-to-cart-btn">В корзину</button>
+                                <div class="quantity-controls-card">
+                                    <button class="quantity-btn-card" data-action="decrease">-</button>
+                                    <span class="quantity-display-card">1</span>
+                                    <button class="quantity-btn-card" data-action="increase">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="product-card" data-id="4" data-name="Починка" data-price="200" data-category="resource" data-discount="15" data-image="images/kniga_pocinka.gif">
+                        <div class="product-image-container">
+                            <img src="images/kniga_pocinka.gif" alt="Починка" class="product-image">
+                        </div>
+                        <h3>Починка</h3><p>Самое востребованное зачарование.</p>
+                         <div class="product-footer">
+                            <div class="price-container">
+                                <span class="price">50 AP</span>
+                            </div>
+                            <div class="product-controls">
+                                <button class="add-to-cart-btn">В корзину</button>
+                                <div class="quantity-controls-card">
+                                    <button class="quantity-btn-card" data-action="decrease">-</button>
+                                    <span class="quantity-display-card">1</span>
+                                    <button class="quantity-btn-card" data-action="increase">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <a href="index.html" class="logo footer-logo"><h1>Коробочки</h1></a>
+                    <p class="footer-text">© 2025 Коробочки. Маркетплейс для игроков Minecraft.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Покупателям</h4>
+                    <ul>
+                        <li><a href="#">Как сделать заказ</a></li>
+                        <li><a href="#">Способы оплаты</a></li>
+                        <li><a href="#">Доставка</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>Партнерам</h4>
+                    <ul>
+                        <li><a href="#">Продавать на Коробочках</a></li>
+                        <li><a href="#">Открыть свой ПВЗ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links">
+                    <h4>О компании</h4>
+                    <ul>
+                        <li><a href="#">Контакты</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="main.js"></script>
+</body>
+</html>

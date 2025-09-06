@@ -1,10 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- НАСТРОЙКИ "БАЗЫ ДАННЫХ" ---
-    const API_KEY = '$2a$10$GqsWKT8niEUqQgRma/vHUu5fRiSmSa3t.Bk1whMP.1R3wbSFNqUu.';
-    const BIN_ID = '68bc2f89ae596e708fe4ad5b';
-    const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
-
     // --- ПРОВЕРКА АВТОРИЗАЦИИ ---
     if (sessionStorage.getItem('currentUser')) {
         window.location.href = 'profile.html';
@@ -31,7 +26,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if(captchaInput) captchaInput.value = "";
     };
 
-    // --- ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК ---
+    // --- ОБНОВЛЕНИЕ СЧЕТЧИКОВ В ШАПКЕ ---
+    const cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+    const updateCartIcon = () => {
+        const counters = document.querySelectorAll('.cart-counter');
+        if (counters.length === 0) return;
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        let displayText = totalItems;
+        if (totalItems > 9) displayText = '9+';
+        counters.forEach(counter => {
+            counter.textContent = displayText;
+            counter.style.display = totalItems > 0 ? 'flex' : 'none';
+        });
+    };
+    updateCartIcon();
+
+    // --- ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК И АНИМАЦИИ ПОЛОСКИ ---
     const updateActiveLine = (activeTab) => {
         if (!activeLine || !activeTab) return;
         activeLine.style.width = `${activeTab.offsetWidth}px`;
@@ -76,49 +86,13 @@ document.addEventListener('DOMContentLoaded', () => {
             button.disabled = isLoading;
         }
     };
-    
-    /** Загружает данные из JSONBin */
-    const getDb = async () => {
-        try {
-            const response = await fetch(`${BIN_URL}/latest`, { 
-                headers: { 'X-Master-Key': API_KEY } 
-            });
-            if (!response.ok) {
-                showMessage('Ошибка загрузки данных. Попробуйте позже.', true);
-                console.error("Failed to fetch DB:", response.statusText);
-                return null;
-            }
-            return response.json();
-        } catch (error) {
-            showMessage('Сетевая ошибка. Проверьте подключение.', true);
-            console.error("Network error:", error);
-            return null;
-        }
-    };
-    
-    /** Обновляет данные в JSONBin */
-    const updateDb = async (data) => {
-        try {
-            return await fetch(BIN_URL, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY },
-                body: JSON.stringify(data)
-            });
-        } catch (error) {
-            showMessage('Сетевая ошибка. Не удалось сохранить данные.', true);
-            console.error("Network error on update:", error);
-            return null;
-        }
-    };
 
-    // --- ОБРАБОТЧИКИ ФОРМ ---
+    // --- ОБРАБОТЧИКИ ФОРМ С FIREBASE ---
     if (registerForm) {
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const submitButton = registerForm.querySelector('.auth-btn');
             toggleButtonLoading(submitButton, true);
-    
-            await new Promise(resolve => setTimeout(resolve, 500));
     
             const nickname = document.getElementById('register-nickname').value.trim();
             const password = document.getElementById('register-password').value;
@@ -138,36 +112,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 toggleButtonLoading(submitButton, false);
                 return;
             }
-            
-            const dbData = await getDb();
-            if (!dbData) { toggleButtonLoading(submitButton, false); return; }
-            
-            const users = dbData.record.users || [];
-            const existingUser = users.find(user => user.nickname.toLowerCase() === nickname.toLowerCase());
-    
-            if (existingUser) {
-                showMessage('Пользователь с таким ником уже существует!', true);
-                generateCaptcha();
-                toggleButtonLoading(submitButton, false);
-                return;
-            }
-    
-            let role = 'Покупатель';
-            if (nickname.toLowerCase() === 'egor201') {
-                role = 'Администратор';
-            }
-            
-            users.push({ nickname, password, balance: 0, role: role });
-            const response = await updateDb({ ...dbData.record, users });
 
-            if(response && response.ok) {
+            try {
+                const usersRef = db.collection('users');
+                const snapshot = await usersRef.where('nickname', '==', nickname).get();
+
+                if (!snapshot.empty) {
+                    showMessage('Пользователь с таким ником уже существует!', true);
+                    generateCaptcha();
+                    toggleButtonLoading(submitButton, false);
+                    return;
+                }
+
+                let role = 'Покупатель';
+                if (nickname.toLowerCase() === 'egor201') {
+                    role = 'Администратор';
+                }
+                
+                await usersRef.add({
+                    nickname: nickname,
+                    password: password,
+                    balance: 0,
+                    role: role
+                });
+
                 showMessage('Вы успешно зарегистрированы! Теперь можете войти.', false);
                 registerForm.reset();
                 loginTab.click();
-            } else {
-                showMessage('Ошибка регистрации. Попробуйте позже.', true);
+                toggleButtonLoading(submitButton, false);
+
+            } catch (error) {
+                console.error("Ошибка при регистрации:", error);
+                showMessage('Ошибка связи с базой данных. Попробуйте позже.', true);
+                toggleButtonLoading(submitButton, false);
             }
-            toggleButtonLoading(submitButton, false);
         });
     }
 
@@ -176,29 +154,47 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const submitButton = loginForm.querySelector('.auth-btn');
             toggleButtonLoading(submitButton, true);
-    
-            await new Promise(resolve => setTimeout(resolve, 500));
             
             const nickname = document.getElementById('login-nickname').value.trim();
             const password = document.getElementById('login-password').value;
-            
-            const dbData = await getDb();
-            if (!dbData) { toggleButtonLoading(submitButton, false); return; }
 
-            const users = dbData.record.users || [];
-            let user = users.find(u => u.nickname.toLowerCase() === nickname.toLowerCase());
-    
-            if (user && user.password === password) {
-                if (user.nickname.toLowerCase() === 'egor201') { user.role = 'Администратор'; } 
-                else if (!user.role) { user.role = 'Покупатель'; }
+            try {
+                const usersRef = db.collection('users');
+                const snapshot = await usersRef.where('nickname', '==', nickname).limit(1).get();
+
+                if (snapshot.empty) {
+                    showMessage('Неверный никнейм или пароль!', true);
+                    toggleButtonLoading(submitButton, false);
+                    return;
+                }
                 
-                const { password: _, ...userToSave } = user;
-                
-                showMessage('Вход выполнен успешно!', false);
-                sessionStorage.setItem('currentUser', JSON.stringify(userToSave));
-                window.location.href = 'profile.html';
-            } else {
-                showMessage('Неверный никнейм или пароль!', true);
+                const userDoc = snapshot.docs[0];
+                let user = userDoc.data();
+                user.id = userDoc.id; // Добавляем ID документа Firebase
+
+                if (user.password === password) {
+                    if (user.nickname.toLowerCase() === 'egor201') {
+                        user.role = 'Администратор';
+                    } else if (!user.role) {
+                        user.role = 'Покупатель';
+                    }
+                    
+                    const { password: _, ...userToSave } = user;
+                    
+                    showMessage('Вход выполнен успешно!', false);
+                    sessionStorage.setItem('currentUser', JSON.stringify(userToSave));
+                    
+                    setTimeout(() => {
+                        window.location.href = 'profile.html';
+                    }, 500);
+
+                } else {
+                    showMessage('Неверный никнейм или пароль!', true);
+                    toggleButtonLoading(submitButton, false);
+                }
+            } catch (error) {
+                console.error("Ошибка при входе:", error);
+                showMessage('Ошибка связи с базой данных. Попробуйте позже.', true);
                 toggleButtonLoading(submitButton, false);
             }
         });

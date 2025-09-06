@@ -1,5 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     
+    // --- НАСТРОЙКИ "БАЗЫ ДАННЫХ" ---
+    const API_KEY = '$2a$10$GqsWKT8niEUqQgRma/vHUu5fRiSmSa3t.Bk1whMP.1R3wbSFNqUu.';
+    const BIN_ID = '68bc2f89ae596e708fe4ad5b';
+    const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
     // --- ПРОВЕРКА АВТОРИЗАЦИИ ---
     if (sessionStorage.getItem('currentUser')) {
         window.location.href = 'profile.html';
@@ -13,8 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const registerForm = document.getElementById('register-form');
     const activeLine = document.querySelector('.active-line');
     const authMessage = document.getElementById('auth-message');
-    
-    // Элементы капчи
     const captchaLabel = document.getElementById('captcha-label');
     const captchaInput = document.getElementById('captcha-input');
     let captchaAnswer;
@@ -28,36 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if(captchaInput) captchaInput.value = "";
     };
 
-    // --- ОБНОВЛЕНИЕ СЧЕТЧИКОВ В ШАПКЕ ---
-    const cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
-    const updateCartIcon = (shouldAnimate) => {
-        const counters = document.querySelectorAll('.cart-counter');
-        if (counters.length === 0) return;
-
-        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-    
-        let displayText = totalItems;
-        if (totalItems > 9) {
-            displayText = '9+';
-        }
-    
-        counters.forEach(counter => {
-            counter.textContent = displayText;
-            counter.style.display = totalItems > 0 ? 'flex' : 'none';
-        });
-
-        if (shouldAnimate) {
-            const icons = document.querySelectorAll('.cart-icon');
-            icons.forEach(icon => {
-                icon.classList.remove('cart-bounce');
-                void icon.offsetWidth;
-                icon.classList.add('cart-bounce');
-            });
-        }
-    };
-    updateCartIcon();
-
-    // --- ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК И АНИМАЦИИ ПОЛОСКИ ---
+    // --- ЛОГИКА ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК ---
     const updateActiveLine = (activeTab) => {
         if (!activeLine || !activeTab) return;
         activeLine.style.width = `${activeTab.offsetWidth}px`;
@@ -102,6 +76,40 @@ document.addEventListener('DOMContentLoaded', () => {
             button.disabled = isLoading;
         }
     };
+    
+    /** Загружает данные из JSONBin */
+    const getDb = async () => {
+        try {
+            const response = await fetch(`${BIN_URL}/latest`, { 
+                headers: { 'X-Master-Key': API_KEY } 
+            });
+            if (!response.ok) {
+                showMessage('Ошибка загрузки данных. Попробуйте позже.', true);
+                console.error("Failed to fetch DB:", response.statusText);
+                return null;
+            }
+            return response.json();
+        } catch (error) {
+            showMessage('Сетевая ошибка. Проверьте подключение.', true);
+            console.error("Network error:", error);
+            return null;
+        }
+    };
+    
+    /** Обновляет данные в JSONBin */
+    const updateDb = async (data) => {
+        try {
+            return await fetch(BIN_URL, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY },
+                body: JSON.stringify(data)
+            });
+        } catch (error) {
+            showMessage('Сетевая ошибка. Не удалось сохранить данные.', true);
+            console.error("Network error on update:", error);
+            return null;
+        }
+    };
 
     // --- ОБРАБОТЧИКИ ФОРМ ---
     if (registerForm) {
@@ -130,8 +138,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 toggleButtonLoading(submitButton, false);
                 return;
             }
-    
-            const users = JSON.parse(localStorage.getItem('users')) || [];
+            
+            const dbData = await getDb();
+            if (!dbData) { toggleButtonLoading(submitButton, false); return; }
+            
+            const users = dbData.record.users || [];
             const existingUser = users.find(user => user.nickname.toLowerCase() === nickname.toLowerCase());
     
             if (existingUser) {
@@ -142,17 +153,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
     
             let role = 'Покупатель';
-            // ПРИ РЕГИСТРАЦИИ ДАЕМ АДМИНКУ
             if (nickname.toLowerCase() === 'egor201') {
                 role = 'Администратор';
             }
             
             users.push({ nickname, password, balance: 0, role: role });
-            localStorage.setItem('users', JSON.stringify(users));
+            const response = await updateDb({ ...dbData.record, users });
 
-            showMessage('Вы успешно зарегистрированы! Теперь можете войти.', false);
-            registerForm.reset();
-            loginTab.click();
+            if(response && response.ok) {
+                showMessage('Вы успешно зарегистрированы! Теперь можете войти.', false);
+                registerForm.reset();
+                loginTab.click();
+            } else {
+                showMessage('Ошибка регистрации. Попробуйте позже.', true);
+            }
             toggleButtonLoading(submitButton, false);
         });
     }
@@ -167,26 +181,21 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const nickname = document.getElementById('login-nickname').value.trim();
             const password = document.getElementById('login-password').value;
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            const user = users.find(u => u.nickname.toLowerCase() === nickname.toLowerCase());
+            
+            const dbData = await getDb();
+            if (!dbData) { toggleButtonLoading(submitButton, false); return; }
+
+            const users = dbData.record.users || [];
+            let user = users.find(u => u.nickname.toLowerCase() === nickname.toLowerCase());
     
             if (user && user.password === password) {
-                // ПРИ ВХОДЕ ПРОВЕРЯЕМ И ПРИ НЕОБХОДИМОСТИ ВОССТАНАВЛИВАЕМ АДМИНКУ
-                if (user.nickname.toLowerCase() === 'egor201') {
-                    user.role = 'Администратор';
-                } 
-                // Если у старого пользователя нет роли, даем "Покупатель"
-                else if (!user.role) {
-                    user.role = 'Покупатель';
-                }
+                if (user.nickname.toLowerCase() === 'egor201') { user.role = 'Администратор'; } 
+                else if (!user.role) { user.role = 'Покупатель'; }
                 
-                // Обновляем данные в основной "базе", чтобы сохранить изменения роли
-                const userInDb = users.find(u => u.nickname === user.nickname);
-                if(userInDb) userInDb.role = user.role;
-                localStorage.setItem('users', JSON.stringify(users));
+                const { password: _, ...userToSave } = user;
                 
                 showMessage('Вход выполнен успешно!', false);
-                sessionStorage.setItem('currentUser', JSON.stringify(user));
+                sessionStorage.setItem('currentUser', JSON.stringify(userToSave));
                 window.location.href = 'profile.html';
             } else {
                 showMessage('Неверный никнейм или пароль!', true);

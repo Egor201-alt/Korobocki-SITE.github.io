@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Коробочки - Мои заказы</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-logo">КОРОБОЧКИ</div>
+    <div class="container">
+        <header>
+            <a href="index.html" class="logo"><h1>Коробочки</h1></a>
+            <div class="search-container">
+                <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="Искать на Коробочках...">
+                </div>
+                <div id="search-suggestions">
+                    <div class="suggestions-section">
+                        <h4>Вы искали</h4>
+                        <div id="search-history"></div>
+                    </div>
+                    <div class="suggestions-section">
+                        <h4>Часто ищут</h4>
+                        <div id="popular-searches"></div>
+                    </div>
+                </div>
+            </div>
+    <div class="user-actions">
+        <!-- Блок для НЕ авторизованного пользователя -->
+        <div class="user-icons" id="guest-icons">
+            <a href="login.html" class="profile-icon"><i class="fas fa-user"></i></a>
+            <a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-counter">0</span></a>
+            <a href="notifications.html" class="notification-icon"><i class="fas fa-bell"></i><span class="notification-counter">0</span></a>
+            <a href="orders.html"><i class="fas fa-box-archive"></i></a>
+        </div>
+    
+        <!-- Блок для АВТОРИЗОВАННОГО пользователя -->
+        <div class="user-profile-header" id="user-profile-header" style="display: none;">
+            <a href="profile.html" class="profile-info">
+                <img src="" alt="avatar" class="header-avatar">
+                <span class="header-nickname"></span>
+            </a>
+            <div class="header-balance">
+                <i class="fas fa-wallet"></i>
+                <span id="header-balance-value">0 AP</span>
+            </div>
+            <div class="header-actions">
+                <a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-counter">0</span></a>
+                <a href="notifications.html" class="notification-icon"><i class="fas fa-bell"></i><span class="notification-counter">0</span></a>
+                <a href="orders.html"><i class="fas fa-box-archive"></i></a>
+            </div>
+        </div>
+    </div>
+    </header>
+
+        <main class="orders-page">
+            <h1>Мои заказы</h1>
+            <div class="orders-list" id="orders-list">
+                <!-- Заказы будут созданы и вставлены сюда с помощью JavaScript -->
+            </div>
+            
+            <!-- Модальное окно для деталей заказа -->
+            <div class="modal-overlay" id="order-details-modal">
+                <div class="modal-content order-details-modal-content">
+                    <button class="modal-close" id="close-order-details-btn">&times;</button>
+                    <h3 id="modal-order-id">Детали заказа</h3>
+                    
+                    <div class="order-details-list" id="modal-order-items">
+                        <!-- Содержимое будет вставляться сюда скриптом -->
+                    </div>
+
+                    <!-- Новая структура для полной сводки -->
+                    <div class="order-details-summary" id="modal-order-summary">
+                        <div class="summary-line">
+                            <span>Товары (<span id="modal-total-items">0</span>)</span>
+                            <span id="modal-subtotal">0 AP</span>
+                        </div>
+                        <div class="summary-line" id="modal-discount-line" style="display: none;">
+                            <span>Скидка</span>
+                            <span id="modal-discount">-0 AP</span>
+                        </div>
+                        <div class="summary-line">
+                            <span>Комиссия</span>
+                            <span id="modal-commission">0 AP</span>
+                        </div>
+                        <div class="summary-line">
+                            <span>Доставка</span>
+                            <span id="modal-delivery">0 AP</span>
+                        </div>
+                        <div class="summary-line total">
+                            <span>Итого:</span>
+                            <span id="modal-total">0 AP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="orders.js"></script>
+</body>
+</html>

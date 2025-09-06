@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Коробочки - Админ-панель</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-logo">КОРОБОЧКИ</div>
+    <div class="container">
+        <header>
+            <a href="index.html" class="logo"><h1>Коробочки</h1></a>
+            <div class="search-container">
+                <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="Искать на Коробочках...">
+                </div>
+            </div>
+            <div class="user-icons">
+                <a href="profile.html" class="profile-icon"><i class="fas fa-user"></i></a>
+                <a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-counter">0</span></a>
+                <a href="notifications.html" class="notification-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-counter">0</span>
+                </a>
+                <a href="orders.html"><i class="fas fa-box-archive"></i></a>
+            </div>
+        </header>
+
+        <main class="admin-panel">
+            <!-- Секция управления пользователями -->
+            <div class="admin-panel-header">
+                <div>
+                    <h1>Панель администратора</h1>
+                    <p>Управление пользователями</p>
+                </div>
+                <div class="user-search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="user-search-input" placeholder="Найти пользователя по нику...">
+                </div>
+            </div>
+            <div class="users-table-container">
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>Никнейм</th>
+                            <th>Роль</th>
+                            <th>Баланс (AP)</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table-body"></tbody>
+                </table>
+            </div>
+
+            <!-- НОВАЯ СЕКЦИЯ УПРАВЛЕНИЯ ЗАКАЗАМИ -->
+            <div class="admin-panel-header" style="margin-top: 40px;">
+                <h2>Управление заказами</h2>
+            </div>
+            <div class="users-table-container">
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>ID Заказа</th>
+                            <th>Пользователь</th>
+                            <th>Статус</th>
+                            <th>Сумма</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-table-body"></tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Модальное окно для редактирования ПОЛЬЗОВАТЕЛЯ -->
+    <div class="modal-overlay" id="edit-user-modal">
+        <div class="modal-content admin-edit-modal">
+            <button class="modal-close" id="close-edit-modal-btn">&times;</button>
+            <h3>Редактирование пользователя</h3>
+            <div class="editing-user-info">
+                <img src="" alt="avatar" id="editing-avatar">
+                <p id="editing-nickname"></p>
+            </div>
+            <form id="edit-user-form">
+                <div class="form-group">
+                    <label for="edit-role">Роль</label>
+                    <select id="edit-role">
+                        <option value="Покупатель">Покупатель</option>
+                        <option value="Продавец">Продавец</option>
+                        <option value="Администратор">Администратор</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-balance">Баланс (AP)</label>
+                    <input type="number" id="edit-balance" min="0" step="1">
+                </div>
+                <button type="submit" class="auth-btn">Сохранить</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- НОВОЕ МОДАЛЬНОЕ ОКНО ДЛЯ РЕДАКТИРОВАНИЯ ЗАКАЗА -->
+    <div class="modal-overlay" id="edit-order-modal">
+        <div class="modal-content admin-edit-modal">
+            <button class="modal-close" id="close-order-modal-btn">&times;</button>
+            <h3>Изменение статуса заказа</h3>
+            <p id="editing-order-id"></p>
+            <form id="edit-order-form">
+                <div class="form-group">
+                    <label for="edit-order-status">Новый статус</label>
+                    <select id="edit-order-status">
+                        <option value="processing">Сбор заказа</option>
+                        <option value="shipping">Доставка</option>
+                        <option value="delivered">Ожидает получения</option>
+                        <option value="received">Получено</option>
+                    </select>
+                </div>
+                <button type="submit" class="auth-btn">Сохранить статус</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="admin.js"></script>
+</body>
+</html>

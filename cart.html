@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Коробочки - Корзина</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-logo">КОРОБОЧКИ</div>
+    <div class="container">
+        <header>
+            <a href="index.html" class="logo"><h1>Коробочки</h1></a>
+            <div class="search-container">
+                <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="Искать на Коробочках...">
+                </div>
+                <div id="search-suggestions">
+                </div>
+            </div>
+    <div class="user-actions">
+        <!-- Блок для НЕ авторизованного пользователя -->
+        <div class="user-icons" id="guest-icons">
+            <a href="login.html" class="profile-icon"><i class="fas fa-user"></i></a>
+            <a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-counter">0</span></a>
+            <a href="notifications.html" class="notification-icon"><i class="fas fa-bell"></i><span class="notification-counter">0</span></a>
+            <a href="orders.html"><i class="fas fa-box-archive"></i></a>
+        </div>
+    
+        <!-- Блок для АВТОРИЗОВАННОГО пользователя -->
+        <div class="user-profile-header" id="user-profile-header" style="display: none;">
+            <a href="profile.html" class="profile-info">
+                <img src="" alt="avatar" class="header-avatar">
+                <span class="header-nickname"></span>
+            </a>
+            <div class="header-balance">
+                <i class="fas fa-wallet"></i>
+                <span id="header-balance-value">0 AP</span>
+            </div>
+            <div class="header-actions">
+                <a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-counter">0</span></a>
+                <a href="notifications.html" class="notification-icon"><i class="fas fa-bell"></i><span class="notification-counter">0</span></a>
+                <a href="orders.html"><i class="fas fa-box-archive"></i></a>
+            </div>
+        </div>
+    </div>
+        </header>
+        <main>
+            <div class="cart-page-grid">
+                <div class="cart-items-container">
+                    <h1>Ваша корзина</h1>
+                    <div id="cart-items-list"></div>
+                </div>
+                <div class="checkout-summary-container">
+                    <div class="checkout-card">
+                        <ul>
+                            <li><span>Товары (<span id="total-items-count">0</span>)</span> <span id="subtotal-price">0 AP</span></li>
+                            <li><span>Скидка</span> <span id="discount-amount">-0 AP</span></li>
+                            <li><span>Комиссия</span> <span id="commission-amount">0 AP</span></li>
+                            <li><span>Доставка</span> <span id="delivery-amount">0 AP</span></li>
+                        </ul>
+                        <div class="total"><span>Итого</span><span id="total-price">0 AP</span></div>
+                        <button class="checkout-btn">Выбрать ПВЗ</button>
+                        <p class="terms">Продолжая, вы подтверждаете свое безоговорочное согласие с правилами</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- НОВОЕ УНИВЕРСАЛЬНОЕ МОДАЛЬНОЕ ОКНО ДЛЯ УВЕДОМЛЕНИЙ -->
+    <div class="modal-overlay" id="custom-alert">
+        <div class="modal-content alert-modal">
+            <p id="alert-message"></p>
+            <button id="alert-ok-btn">OK</button>
+        </div>
+    </div>
+
+    <script src="cart.js"></script>
+</body>
+</html>

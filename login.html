@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Коробочки - Вход</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-logo">КОРОБОЧКИ</div>
+    <div class="container">
+        <header>
+            <a href="index.html" class="logo"><h1>Коробочки</h1></a>
+            <div class="search-container">
+                <div class="search-bar"><input type="text" id="search-input" placeholder="Искать на Коробочках...">
+                </div>
+            </div>
+            <div class="user-icons">
+                <a href="login.html" class="profile-icon"><i class="fas fa-user"></i></a>
+                <a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-counter">0</span></a>
+                <a href="#"><i class="fas fa-bell"></i></a>
+                <a href="orders.html"><i class="fas fa-box-archive"></i></a>
+            </div>
+        </header>
+
+        <main>
+            <div class="auth-container">
+                <div class="auth-tabs">
+                    <a href="#" id="login-tab" class="auth-tab active">Вход</a>
+                    <a href="#" id="register-tab" class="auth-tab">Регистрация</a>
+                    <div class="active-line"></div>
+                </div>
+                
+                <!-- Форма входа -->
+                <form id="login-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="login-nickname">Никнейм</label>
+                        <input type="text" id="login-nickname" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Пароль</label>
+                        <input type="password" id="login-password" required>
+                    </div>
+                    <button type="submit" class="auth-btn">
+                        <span class="btn-text">Войти</span>
+                        <div class="loader"></div>
+                    </button>
+                </form>
+
+                <!-- Форма регистрации -->
+                <form id="register-form" class="auth-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="register-nickname">Ваш внутриигровой ник</label>
+                        <input type="text" id="register-nickname" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password">Придумайте пароль</label>
+                        <input type="password" id="register-password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-password-confirm">Повторите пароль</label>
+                        <input type="password" id="register-password-confirm" required>
+                    </div>
+                    <div class="form-group captcha-group">
+                        <label for="captcha-input" id="captcha-label">Решите пример:</label>
+                        <input type="text" id="captcha-input" required autocomplete="off">
+                    </div>
+                    <button type="submit" class="auth-btn">
+                        <span class="btn-text">Зарегистрироваться</span>
+                        <div class="loader"></div>
+                    </button>
+                </form>
+
+                <p class="auth-message" id="auth-message"></p>
+            </div>
+        </main>
+    </div>
+    <script src="auth.js"></script>
+</body>
+</html>

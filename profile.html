@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Коробочки - Профиль</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-logo">КОРОБОЧКИ</div>
+    <div class="container">
+        <header>
+            <a href="index.html" class="logo"><h1>Коробочки</h1></a>
+            <div class="search-container">
+                <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="Искать на Коробочках...">
+                </div>
+                <div id="search-suggestions"></div>
+            </div>
+            <div class="user-icons">
+                <a href="profile.html" class="profile-icon"><i class="fas fa-user"></i></a>
+                <a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-counter">0</span></a>
+                <a href="notifications.html" class="notification-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-counter">0</span>
+                </a>
+                <a href="orders.html"><i class="fas fa-box-archive"></i></a>
+            </div>
+        </header>
+
+        <main>
+            <div class="profile-grid">
+                <!-- Карточка профиля -->
+                <div class="profile-widget user-card">
+                    <img src="" alt="User Avatar" class="avatar">
+                    <div class="user-info">
+                        <span class="label">Никнейм</span>
+                        <span class="nickname">Загрузка...</span>
+                    </div>
+                    <a href="#" class="logout-link" id="logout-btn">Выйти</a>
+                </div>
+
+                <!-- Карточка баланса с кнопкой "Управление" -->
+                <div class="profile-widget balance-card">
+                    <div class="widget-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <div class="widget-info">
+                        <span class="label">Баланс</span>
+                        <span class="value" id="balance-value">0 AP</span>
+                    </div>
+                    <button class="refill-btn" id="open-balance-modal-btn">Управление</button>
+                </div>
+                
+                <!-- Карточка доставки -->
+                <div class="profile-widget delivery-card">
+                    <div class="widget-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="widget-info">
+                        <span class="label">Ближайшая доставка</span>
+                        <span class="value">Не ожидается</span>
+                    </div>
+                </div>
+
+                <!-- Карточка статуса -->
+                <div class="profile-widget status-card">
+                    <div class="widget-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="widget-info">
+                        <span class="label">Статус аккаунта</span>
+                        <span class="value" id="status-value">Загрузка...</span>
+                    </div>
+                </div>
+
+                <!-- Ссылка на админ-панель -->
+                <a href="admin.html" class="profile-widget admin-panel-link" id="admin-panel-link" style="display: none;">
+                    <div class="widget-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <div class="widget-info">
+                        <span class="value">Админ-панель</span>
+                    </div>
+                </a>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Старое модальное окно для алертов -->
+    <div class="modal-overlay" id="custom-alert">
+        <div class="modal-content alert-modal">
+            <p id="alert-message"></p>
+            <button id="alert-ok-btn">OK</button>
+        </div>
+    </div>
+    
+    <!-- ПОЛНОСТЬЮ ОБНОВЛЕННОЕ МОДАЛЬНОЕ ОКНО ДЛЯ УПРАВЛЕНИЯ БАЛАНСОМ -->
+    <div class="modal-overlay" id="balance-modal">
+        <div class="modal-content balance-modal-content">
+            <button class="modal-close" id="close-balance-modal-btn">&times;</button>
+            <h3>Управление балансом</h3>
+            <div class="current-balance-display">
+                <span>Текущий баланс:</span>
+                <span id="modal-balance-value">0 AP</span>
+            </div>
+            <div class="balance-actions">
+                <button class="balance-action-btn refill" id="modal-refill-btn">
+                    <i class="fas fa-plus"></i> Пополнить
+                </button>
+                <button class="balance-action-btn withdraw" id="modal-withdraw-btn">
+                    <i class="fas fa-minus"></i> Вывести
+                </button>
+            </div>
+            <div class="transactions-history">
+                <h4>История транзакций</h4>
+                <div class="transactions-list" id="transactions-list">
+                    <!-- Транзакции будут вставлены сюда -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="profile.js"></script>
+</body>
+</html>
